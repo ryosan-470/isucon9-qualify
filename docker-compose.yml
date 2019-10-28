@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+    - 13306:3306
+    volumes:
+      - ./mysqld:/var/lib/mysql
+  app:
+    build:
+      context: ./webapp/
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_HOST: mysql
+      GO111MODULE: "on"
+    ports:
+    - 18000:8000
+    volumes:
+      - ./webapp/go:/app/go
+      - ./webapp/public/upload:/app/public/upload
