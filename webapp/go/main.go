@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -320,6 +321,10 @@ func main() {
 	defer dbx.Close()
 
 	mux := goji.NewMux()
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	// API
 	mux.HandleFunc(pat.Post("/initialize"), postInitialize)
